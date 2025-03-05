@@ -45,18 +45,7 @@ const Category = () => {
 
 
     const categories = ['Fruits', 'Vegetables', 'Oil'];
-    // const subCategories = {
-    //     'Fruits': [
-    //         'Apple',
-    //         'Banana', 'Grapes', 'Cherry',
-    //     ],
-    //     'Vegetables': [
-    //         'Carrot', 'Betroot', 'Cucumber', 'Onion',
-    //     ],
-    //     'Oil': [
-    //         'Coconut Oil', 'Olive Oil', 'Sunflower Oil',
-    //     ]
-    // };
+   
 
     const hangleOnChangeCat = (event) => {
         setCategory(event.target.value);
