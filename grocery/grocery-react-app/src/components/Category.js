@@ -63,7 +63,8 @@ const Category = () => {
             <p> Dropdowns </p>
             <br></br>
             {/* <label value='category'> Choose something you need</label> */}
-            <select name='category' id='category' onChange={hangleOnChangeCat} value ={category}>
+            <select name='category' id='category' onChange={hangleOnChangeCat} value={category}>
+                <option selected> -- Select one --</option>
                 {categories.length > 0 &&
                     categories.map((value, index) => (
                         <option key={index} value={value} >{ value }</option>
@@ -76,7 +77,8 @@ const Category = () => {
 
             <p> The value you selected is : {category}</p>
             
-            <select name='subcat' onChange={ changeSub} value ={subCategory}>
+            <select name='subcat' onChange={changeSub} value={subCategory}>
+                <option selected> -- Select one --</option>
                 {category &&
                     subCategories.length > 0 &&
                     subCategories.map((value, index) => (
