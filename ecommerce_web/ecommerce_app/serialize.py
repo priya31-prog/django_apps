@@ -3,6 +3,15 @@ from .models import AccountInfo
 
 
 class AccountInfoSerialize(serializers.ModelSerializer):
+    user_name = serializers.CharField(source="userName")
+
     class Meta:
         model = AccountInfo
-        fields = "__all__"
+        fields = [
+            "user_name",
+            "userid",
+            "phoneNumber",
+            "profileImage",
+            "email",
+            "password",
+        ]
