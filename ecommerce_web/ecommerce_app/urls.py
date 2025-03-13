@@ -1,10 +1,19 @@
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+
+# from rest_framework.routers import DefaultRouter
+# from . import views
+
+# router = DefaultRouter()
+# router.register(r"accounts/<int:id>", views.AccountInfoView)
+
+# urlpatterns = [
+#     path("", include(router.urls)),
+# ]
+
+
 from . import views
 
-router = DefaultRouter()
-router.register(r"accounts", views.AccountInfoView)
-
 urlpatterns = [
-    path("", include(router.urls)),
+    path("ecommerce/", views.AccountInfoView),
+    path("ecommerce/<int:id>/", views.SingleAccountView),
 ]

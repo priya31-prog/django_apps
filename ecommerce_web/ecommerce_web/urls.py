@@ -21,5 +21,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("ecommerce_app/", include("ecommerce_app.urls")),
+    # api application end point
+    path("api/v1/", include("ecommerce_app.urls")),
 ]
