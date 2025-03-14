@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import AccountInfo
+from .models import AccountInfo, Address
 
 
 class AccountInfoSerialize(serializers.ModelSerializer):
@@ -14,4 +14,18 @@ class AccountInfoSerialize(serializers.ModelSerializer):
             "profileImage",
             "email",
             "password",
+        ]
+
+
+class AddressSerialize(serializers.ModelSerializer):
+    user_id = serializers.CharField(source="accountInfo_userid")
+
+    class Meta:
+        model = Address
+        fields = [
+            "user_id",
+            "streetName",
+            "addressLine1",
+            "id",
+            "pincode",
         ]

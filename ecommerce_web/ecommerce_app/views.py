@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .models import AccountInfo
-from .serialize import AccountInfoSerialize
+from .models import AccountInfo, Address
+from .serialize import AccountInfoSerialize, AddressSerialize
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 
 
 # class AccountInfoView(viewsets.ModelViewSet):
@@ -54,4 +55,45 @@ def SingleAccountView(request, id):
 
     elif request.method == "DELETE":
         queryset.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class AddressView(APIView):
+    def get(self, request):
+        address = Address.objects.all()
+        serialize = AddressSerialize(address, many=True)
+        return Response(serialize.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serialize = AddressSerialize(data=request.data)
+        if serialize.is_valid():
+            serialize.save()
+            return Response(serialize.data, status=status.HTTP_201_CREATED)
+        return Response(serialize.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SingleAddress(APIView):
+
+    def get_object(self, id):
+        try:
+            return Address.objects.get(pk=id)
+        except Address.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, pk):
+        address = self.get_object(pk)
+        serialize = AddressSerialize(address, many=True)
+        return Response(serialize.data, status=status.HTTP_200_OK)
+
+    def put(self, request, pk):
+        address = self.get_object(pk)
+        serialize = AddressSerialize(address, data=request.data)
+        if serialize.is_valid():
+            serialize.save()
+            return Response(serialize.data, status=status.HTTP_200_OK)
+        return Response(serialize.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        address = self.get_object(pk)
+        address.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
