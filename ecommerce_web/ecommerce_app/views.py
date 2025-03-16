@@ -58,6 +58,8 @@ def SingleAccountView(request, id):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+# alternative method to mixins
+
 # class AddressView(APIView):
 #     def get(self, request):
 #         address = Address.objects.all()
