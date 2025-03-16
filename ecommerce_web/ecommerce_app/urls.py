@@ -17,4 +17,5 @@ urlpatterns = [
     path("ecommerce/", views.AccountInfoView),
     path("ecommerce/<int:id>/", views.SingleAccountView),
     path("address/", views.AddressView.as_view()),
+    path("address/<int:pk>/", views.SingleAddress.as_view()),
 ]

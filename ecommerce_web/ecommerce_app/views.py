@@ -3,7 +3,7 @@ from rest_framework import viewsets
 from .models import AccountInfo, Address
 from .serialize import AccountInfoSerialize, AddressSerialize
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, mixins, generics
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
@@ -58,42 +58,87 @@ def SingleAccountView(request, id):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class AddressView(APIView):
+# class AddressView(APIView):
+#     def get(self, request):
+#         address = Address.objects.all()
+#         serialize = AddressSerialize(address, many=True)
+#         return Response(serialize.data, status=status.HTTP_200_OK)
+
+#     def post(self, request):
+#         serialize = AddressSerialize(data=request.data)
+#         if serialize.is_valid():
+#             serialize.save()
+#             return Response(serialize.data, status=status.HTTP_201_CREATED)
+#         return Response(serialize.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# class SingleAddress(APIView):
+
+#     def get_object(self, id):
+#         try:
+#             return Address.objects.get(pk=id)
+#         except Address.DoesNotExist:
+#             return None
+
+#     def get(self, request, id):
+#         address = self.get_object(id)
+#         if address is not None:
+#             try:
+#                 account_info = address.id
+#             except AccountInfo.DoesNotExist:
+#                 return Response(
+#                     {"error": "Account information not found"},
+#                     status=status.HTTP_404_NOT_FOUND,
+#                 )
+
+#             serializer = AddressSerialize(address)  # Use your serializer here
+#             return Response(serializer.data)  # Return serialized data
+#         return Response(
+#             {"error": "Address not found"}, status=status.HTTP_404_NOT_FOUND
+#         )
+
+
+#     def put(self, request, id):
+#         address = self.get_object(id)
+#         serialize = AddressSerialize(address, data=request.data)
+#         if serialize.is_valid():
+#             serialize.save()
+#             return Response(serialize.data, status=status.HTTP_200_OK)
+#         return Response(serialize.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#     def delete(self, request, id):
+#         address = self.get_object(id)
+#         address.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class AddressView(
+    mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView
+):
+    queryset = Address.objects.all()
+    serializer_class = AddressSerialize
+
     def get(self, request):
-        address = Address.objects.all()
-        serialize = AddressSerialize(address, many=True)
-        return Response(serialize.data, status=status.HTTP_200_OK)
+        return self.list(request)
 
     def post(self, request):
-        serialize = AddressSerialize(data=request.data)
-        if serialize.is_valid():
-            serialize.save()
-            return Response(serialize.data, status=status.HTTP_201_CREATED)
-        return Response(serialize.errors, status=status.HTTP_400_BAD_REQUEST)
+        return self.create(request)
 
 
-class SingleAddress(APIView):
-
-    def get_object(self, id):
-        try:
-            return Address.objects.get(pk=id)
-        except Address.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+class SingleAddress(
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    generics.GenericAPIView,
+):
+    queryset = Address.objects.all()
+    serializer_class = AddressSerialize
 
     def get(self, request, pk):
-        address = self.get_object(pk)
-        serialize = AddressSerialize(address, many=True)
-        return Response(serialize.data, status=status.HTTP_200_OK)
+        return self.retrieve(request, pk)
 
     def put(self, request, pk):
-        address = self.get_object(pk)
-        serialize = AddressSerialize(address, data=request.data)
-        if serialize.is_valid():
-            serialize.save()
-            return Response(serialize.data, status=status.HTTP_200_OK)
-        return Response(serialize.errors, status=status.HTTP_400_BAD_REQUEST)
+        return self.update(request, pk)
 
     def delete(self, request, pk):
-        address = self.get_object(pk)
-        address.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return self.destroy(request, pk)
